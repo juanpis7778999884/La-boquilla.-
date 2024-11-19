@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Boquilla - Experiencia Gastronómica Interactiva</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+        
+        :root {
+            --primary-color: #FF6347;
+            --secondary-color: #20B2AA;
+            --accent-color: #FFA07A;
+            --text-color: #333;
+            --background-color: #FFF5EE;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Merriweather', serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background-color: var(--background-color);
+        }
+        
+        .parallax-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .parallax-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            will-change: transform;
+            transition: filter 0.5s ease;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-content {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 800px;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            color: white;
+            text-shadow: 3px 3px 0px var(--primary-color), 6px 6px 0px var(--secondary-color);
+            animation: titleAnimation 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleAnimation {
+            from { transform: rotate(-5deg) scale(1); }
+            to { transform: rotate(5deg) scale(1.05); }
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+            color: white;
+            text-shadow: 2px 2px 0px var(--secondary-color);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            background-color: var(--secondary-color);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .story {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 800px;
+            margin: 20px auto;
+            color: var(--text-color);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        
+        .story.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .story h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+            text-align: center;
+        }
+        
+        .story p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .menu {
+            padding: 80px 0;
+            position: relative;
+        }
+        
+        .menu::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            z-index: -1;
+        }
+        
+        .menu h2 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            text-shadow: 2px 2px 0px var(--secondary-color);
+            animation: colorChange 5s infinite alternate;
+        }
+        
+        @keyframes colorChange {
+            0% { color: var(--primary-color); }
+            50% { color: var(--secondary-color); }
+            100% { color: var(--accent-color); }
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .menu-item {
+            background-color: white;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .menu-item img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .menu-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .menu-item-content {
+            padding: 20px;
+        }
+        
+        .menu-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .menu-item p {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .menu-item:hover::before {
+            opacity: 1;
+        }
+        
+        .game-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 80px 0;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .game-section h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .orders {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        .game-button {
+            height: 120px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .game-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s ease;
+        }
+        
+        .game-button:hover::before {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .game-button span {
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .menu h2, .game-section h2 {
+                font-size: 2.5rem;
+            }
+            
+            .game-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax-container">
+        <div class="parallax-layer" style="background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-11%20at%2011.57.17%20AM-Bq0BLZfkR0bvqIVhHUvMic4N8v36Mf.jpeg');"></div>
+        <div class="parallax-layer" style="background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-11%20at%2011.57.18%20AM-4jCd8TopO9VM3S16VJDnxn9qlAAcwe.jpeg'); transform: translateY(100%);"></div>
+        <div class="parallax-layer" style="background-image: url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-11%20at%2011.57.17%20AM%20(2)-Fx2IhMW9CxqkfRsperzmxPTFVJ9rmr.jpeg'); transform: translateY(200%);"></div>
+    </div>
+    
+    <div class="content">
+        <div class="container">
+            <section class="hero">
+                <div class="hero-content">
+                    <h1>La Boquilla</h1>
+                    <p>Más de 40 años de tradición en San Vicente de Chucuri</p>
+                    <button id="storyButton" class="btn">Nuestra Historia</button>
+                </div>
+            </section>
+
+            <div id="story" class="story">
+                <h2>La Historia de La Boquilla</h2>
+                <p>Fundada en 1980 por la familia gomez, La Boquilla comenzó como un pequeño puesto esquinero de San Vicente de Chucuri.  Doña Graciela y Don Salomon, con su imaginacion y berraquera hicieron de un negocio pequeño a  un emblema de la comunidad chucureña, pronto se ganaron el corazón (y el paladar) de la comunidad.</p>
+                <p>A lo largo de los años, La Boquilla se ha convertido en un ícono gastronómico de esta tierra, manteniendo viva la tradición culinaria chucureña. Hoy, la segunda generación de la familia gomez continúa sirviendo los mismos sabores auténticos que han deleitado a visitantes y locales por más de cuatro décadas.</p>
+                <p>Nuestro compromiso con la calidad y la autenticidad nos ha permitido crecer, pero nunca olvidamos nuestras raíces. Cada plato que servimos es un homenaje a la rica historia culinaria de San Vicente de Chucuri y a las generaciones de cocineros que han perfeccionado estas recetas.</p>
+            </div>
+
+            <section class="menu">
+                <h2>Nuestro Festín de Sabores</h2>
+                <div class="menu-grid" id="menuGrid"></div>
+            </section>
+
+            <section class="game-section">
+                <h2>¡Conviértete en Chef Estrella!</h2>
+                <p>Domina la cocina de La Boquilla y conquista paladares</p>
+                <div class="game-container">
+                    <button id="startGameButton" class="btn">¡A Cocinar con Pasión!</button>
+                    <div id="gameArea" style="display: none;">
+                        <div class="game-stats">
+                            <span>Platos: <span id="score">0</span></span>
+                            <span>Tiempo: <span id="timeLeft">60</span>s</span>
+                            <span>Satisfacción: <span id="satisfaction">100</span>%</span>
+                            <span>Combo: x<span id="combo">0</span></span>
+                        </div>
+                        <div class="orders">
+                            <h3>Pedidos Pendientes:</h3>
+                            <div id="ordersList"></div>
+                        </div>
+                        <div class="game-buttons" id="gameButtons"></div>
+                    </div>
+                    <div id="gameOver" style="display: none;">
+                        <h3>¡Fin del Turno!</h3>
+                        <p>Platos Servidos: <span id="finalScore"></span></p>
+                        <p>Satisfacción Final: <span id="finalSatisfaction"></span>%</p>
+                        <button id="restartGameButton" class="btn">¡Otro Turno de Sabor!</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const menuItems = [
+            {
+                name: "Chorizo ",
+                price: 5000,
+                image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-11%20at%2011.57.18%20AM-4jCd8TopO9VM3S16VJDnxn9qlAAcwe.jpeg",
+                description: "Chorizo 100% de cerdo, preparado artesanalmente mediante un proceso especial de amasado que permite reunir todos los sabores de nuestras especias seleccionadas, y perfectamente embutido en una tripa de cerdo para conservar su medida.",
+                color: "#EF4444"
+            },
+            {
+                name: "Tamal ",
+                price: 6000,
+                image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-11%20at%2011.57.17%20AM%20(2)-Fx2IhMW9CxqkfRsperzmxPTFVJ9rmr.jpeg",
+                description: "Tamal elaborado con masa de maíz y arvejas, relleno de cerdo. La masa es cocida a fuego lento durante 6 a 7 horas para lograr su textura perfecta.",
+                color: "#F59E0B"
+            },
+            {
+                name: "Empanada de Arroz con Chorizo",
+                price: 3000,
+                image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-13%20at%209.49.37%20AM-sk0gXhjjftxsLYe6XgDztmRgkZbxXW.jpeg",
+                description: "Deliciosa empanada rellena de arroz y nuestro chorizo especial, perfectamente frita hasta lograr un dorado crujiente.",
+                color: "#F97316"
+            },
+            {
+                name: "Morcilla con Papa Chorreada",
+                price: 4500,
+                image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-13%20at%209.49.36%20AM-XXKQlPnkJDxdj6XZUaUwCQdaD9tsRi.jpeg",
+                description: "Morcilla artesanal elaborada por una abuela muy querida de nuestra comunidad, servida con papa chorreada. Apoyamos el sason local.",
+                color: "#8B5CF6"
+            },
+            {
+                name: "Huevo Cocido con Papa Chorreada",
+                price: 3000,
+                image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/WhatsApp%20Image%202024-11-13%20at%209.49.36%20AM%20(1)-g6eLX9dpZkCQtcp0J3b1tQzYxBXYJZ.jpeg",
+                description: "Huevos cocidos perfectamente acompañados de nuestra deliciosa papa chorreada, una combinacion colosal para cualquier bolsillo.",
+                color: "#10B981"
+            }
+        ];
+
+        // Populate menu
+        const menuGrid = document.getElementById('menuGrid');
+        menuItems.forEach((item, index) => {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
+            menuItem.innerHTML = `
+                <img src="${item.image}" alt="${item.name}">
+                <div class="menu-item-content">
+                    <h3>${item.name}</h3>
+                    <p>$${item.price.toLocaleString()}</p>
+                    <button class="btn" onclick="showItemDescription('${item.name}', '${item.description}', '${item.color}')">Descubre el Sabor</button>
+                </div>
+            `;
+            menuItem.style.animationDelay = `${index * 0.1}s`;
+            menuGrid.appendChild(menuItem);
+        });
+
+        function showItemDescription(name, description, color) {
+            const modal = document.createElement('div');
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            modal.style.display = 'flex';
+            modal.style.justifyContent = 'center';
+            modal.style.alignItems = 'center';
+            modal.style.zIndex = '1000';
+
+            const content = document.createElement('div');
+            content.style.backgroundColor = 'white';
+            content.style.padding = '20px';
+            content.style.borderRadius = '10px';
+            content.style.maxWidth = '80%';
+            content.style.boxShadow = `0 0 20px ${color}`;
+            content.style.animation = 'modalAppear 0.3s ease-out';
+            content.innerHTML = `
+                <h3 style="color: ${color}; font-size: 2rem; margin-bottom: 10px;">${name}</h3>
+                <p style="font-size: 1.2rem; line-height: 1.6;">${description}</p>
+                <button class="btn" style="background-color: ${color};" onclick="this.parentElement.parentElement.remove()">Cerrar</button>
+            `;
+
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Story toggle with smooth transition
+        const storyButton = document.getElementById('storyButton');
+        const story = document.getElementById('story');
+        storyButton.addEventListener('click', () => {
+            story.classList.toggle('show');
+            storyButton.textContent = story.classList.contains('show') ? 'Ocultar Historia' : 'Nuestra Historia';
+        });
+
+        // Game logic
+        let gameStarted = false;
+        let score = 0;
+        let timeLeft = 60;
+        let gameOver = false;
+        let orders = [];
+        let customerSatisfaction = 100;
+        let combo = 0;
+        let timer;
+
+        const startGameButton = document.getElementById('startGameButton');
+        const gameArea = document.getElementById('gameArea');
+        const gameOverArea = document.getElementById('gameOver');
+        const restartGameButton = document.getElementById('restartGameButton');
+        const scoreElement = document.getElementById('score');
+        const timeLeftElement = document.getElementById('timeLeft');
+        const satisfactionElement = document.getElementById('satisfaction');
+        const comboElement = document.getElementById('combo');
+        const ordersListElement = document.getElementById('ordersList');
+        const gameButtonsElement = document.getElementById('gameButtons');
+        const finalScoreElement = document.getElementById('finalScore');
+        const finalSatisfactionElement = document.getElementById('finalSatisfaction');
+
+        function startGame() {
+            gameStarted = true;
+            score = 0;
+            timeLeft = 60;
+            gameOver = false;
+            orders = [];
+            customerSatisfaction = 100;
+            combo = 0;
+            updateDisplay();
+            generateOrder();
+            startGameButton.style.display = 'none';
+            gameArea.style.display = 'block';
+            gameOverArea.style.display = 'none';
+
+            timer = setInterval(() => {
+                timeLeft--;
+                updateDisplay();
+                if (timeLeft <= 0 || customerSatisfaction <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function generateOrder() {
+            const newOrder = menuItems[Math.floor(Math.random() * menuItems.length)].name;
+            orders.push(newOrder);
+            updateDisplay();
+        }
+
+        function handleOrderComplete(itemName) {
+            if (orders[0] === itemName) {
+                score++;
+                orders.shift();
+                combo++;
+                customerSatisfaction = Math.min(100, customerSatisfaction + 5);
+                generateOrder();
+                showFeedback('¡Excelente!', 'success');
+            } else {
+                score = Math.max(0, score - 1);
+                combo = 0;
+                customerSatisfaction = Math.max(0, customerSatisfaction - 10);
+                showFeedback('¡Ups! Pedido equivocado', 'error');
+            }
+            updateDisplay();
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.createElement('div');
+            feedback.textContent = message;
+            feedback.style.position = 'fixed';
+            feedback.style.top = '20px';
+            feedback.style.left = '50%';
+            feedback.style.transform = 'translateX(-50%)';
+            feedback.style.padding = '10px 20px';
+            feedback.style.borderRadius = '5px';
+            feedback.style.color = 'white';
+            feedback.style.fontWeight = 'bold';
+            feedback.style.zIndex = '1000';
+            feedback.style.opacity = '0';
+            feedback.style.transition = 'opacity 0.3s ease';
+
+            if (type === 'success') {
+                feedback.style.backgroundColor = '#4CAF50';
+            } else {
+                feedback.style.backgroundColor = '#F44336';
+            }
+
+            document.body.appendChild(feedback);
+
+            setTimeout(() => {
+                feedback.style.opacity = '1';
+            }, 10);
+
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                setTimeout(() => {
+                    feedback.remove();
+                }, 300);
+            }, 1500);
+        }
+
+        function updateDisplay() {
+            scoreElement.textContent = score;
+            timeLeftElement.textContent = timeLeft;
+            satisfactionElement.textContent = customerSatisfaction;
+            comboElement.textContent = combo;
+            ordersListElement.innerHTML = orders.slice(0, 3).map(order => {
+                const item = menuItems.find(item => item.name === order);
+                return `
+                    <span style="
+                        background-color: ${item.color};
+                        padding: 5px 10px;
+                        border-radius: 15px;
+                        margin: 2px;
+                        display: inline-block;
+                        font-weight: bold;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                        animation: orderPulse 1s infinite alternate;
+                    ">${order}</span>
+                `;
+            }).join('');
+        }
+
+        function endGame() {
+            clearInterval(timer);
+            gameStarted = false;
+            gameOver = true;
+            gameArea.style.display = 'none';
+            gameOverArea.style.display = 'block';
+            finalScoreElement.textContent = score;
+            finalSatisfactionElement.textContent = customerSatisfaction;
+        }
+
+        startGameButton.addEventListener('click', startGame);
+        restartGameButton.addEventListener('click', startGame);
+
+        // Populate game buttons
+        menuItems.forEach(item => {
+            const button = document.createElement('button');
+            button.className = 'game-button';
+            button.style.backgroundImage = `url('${item.image}')`;
+            button.innerHTML = `<span>${item.name}</span>`;
+            button.addEventListener('click', () => handleOrderComplete(item.name));
+            gameButtonsElement.appendChild(button);
+        });
+
+        // Parallax effect
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.pageYOffset;
+            document.querySelectorAll('.parallax-layer').forEach((layer, index) => {
+                const speed = (index + 1) * 0.5;
+                layer.style.transform = `translateY(${scrollPosition * speed}px)`;
+            });
+        });
+
+        // Intersection Observer for menu items animation
+        const menuItemsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = `fadeInUp 0.5s ease forwards ${entry.target.style.animationDelay}`;
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.menu-item').forEach(item => {
+            menuItemsObserver.observe(item);
+        });
+
+        // Add some interactive elements
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            document.querySelectorAll('.parallax-layer').forEach((layer, index) => {
+                const offsetX = (mouseX - 0.5) * (index + 1) * 10;
+                const offsetY = (mouseY - 0.5) * (index + 1) * 10;
+                layer.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
